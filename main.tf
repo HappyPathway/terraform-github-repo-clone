@@ -1,6 +1,5 @@
 provider "github" {}
 
-
 data "github_repository" "repo_src" {
   full_name = "${var.repo_src}"
 }
@@ -30,5 +29,18 @@ resource "null_resource" "push" {
   }
   provisioner "local-exec" {
     command = "cd ${var.repo_dir}; rm -rf .git*; git init; git remote add origin ${github_repository.repo_dest.ssh_clone_url}; git pull origin master; git add .; git commit -m 'initial add'; git push -u origin master"
+  }
+}
+
+resource "null_resource" "tag_release" {
+  count = "${var.module ? 1 : 0}"
+  depends_on = [
+    "null_resource.clone"
+  ]
+  triggers = {
+    push_trigger = "${github_repository.repo_dest.name}"
+  }
+  provisioner "local-exec" {
+    command = "git tag -a 1.0.0 -m 'initial release'; git push -u origin 1.0.0"
   }
 }
