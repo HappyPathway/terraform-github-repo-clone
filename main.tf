@@ -32,7 +32,7 @@ resource "null_resource" "push" {
   }
 }
 
-resource "null_resource" "push" {
+resource "null_resource" "tag_release" {
   count = "${var.module ? 1 : 0}"
   depends_on = [
     "null_resource.clone"
