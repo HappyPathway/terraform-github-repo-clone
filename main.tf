@@ -1,9 +1,5 @@
 provider "github" {}
 
-variable "repo_dir" {
-  default = "/tmp/repo"
-}
-
 data "github_repository" "repo_src" {
   full_name = "${var.repo_src}"
 }
